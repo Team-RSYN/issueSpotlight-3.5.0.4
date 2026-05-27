@@ -17,12 +17,14 @@ namespace APP\plugins\generic\issueSpotlight\controllers\grid;
 
 use APP\core\Application;
 use APP\facades\Repo;
+use APP\security\authorization\OjsIssueRequiredPolicy;
 use PKP\controllers\grid\GridHandler;
 use PKP\core\JSONMessage;
 use PKP\db\DAO;
 use PKP\db\DAORegistry;
 use PKP\security\authorization\ContextAccessPolicy;
 use PKP\security\Role;
+use PKP\submission\PKPSubmission;
 use Illuminate\Support\Facades\DB;
 
 class IssueSpotlightGridHandler extends GridHandler {
@@ -42,9 +44,7 @@ class IssueSpotlightGridHandler extends GridHandler {
 	 */
 	function authorize($request, &$args, $roleAssignments) {
 		$this->addPolicy(new ContextAccessPolicy($request, $roleAssignments));
-
-		import('classes.security.authorization.OjsIssueRequiredPolicy');
-		$this->addPolicy(new \OjsIssueRequiredPolicy($request, $args));
+		$this->addPolicy(new OjsIssueRequiredPolicy($request, $args));
 
 		return parent::authorize($request, $args, $roleAssignments);
 	}
@@ -69,9 +69,8 @@ class IssueSpotlightGridHandler extends GridHandler {
 		$submissions = Repo::submission()->getCollector()
 			->filterByContextIds([$context->getId()])
 			->filterByIssueIds([$issue->getId()])
+			->filterByStatus([PKPSubmission::STATUS_PUBLISHED])
 			->getMany();
-		
-		$articlesRows = '';
 		$authorsRows = '';
 		$articleCount = 0;
 		$uniqueAuthors = [];
@@ -223,9 +222,8 @@ class IssueSpotlightGridHandler extends GridHandler {
 		$submissions = Repo::submission()->getCollector()
 			->filterByContextIds([$contextId])
 			->filterByIssueIds([$issue->getId()])
+			->filterByStatus([PKPSubmission::STATUS_PUBLISHED])
 			->getMany();
-
-		$titles = [];
 		foreach ($submissions as $s) {
 			$t = $s->getLocalizedTitle() ?: ($s->getCurrentPublication() ? $s->getCurrentPublication()->getLocalizedTitle() : '');
 			if ($t) $titles[] = $t;
@@ -268,6 +266,7 @@ class IssueSpotlightGridHandler extends GridHandler {
 		$submissions = Repo::submission()->getCollector()
 			->filterByContextIds([$contextId])
 			->filterByIssueIds([$issue->getId()])
+			->filterByStatus([PKPSubmission::STATUS_PUBLISHED])
 			->getMany();
 
 		$payload = "";
@@ -385,6 +384,7 @@ class IssueSpotlightGridHandler extends GridHandler {
 		$submissionsGeo = Repo::submission()->getCollector()
 			->filterByContextIds([$contextId])
 			->filterByIssueIds([$issue->getId()])
+			->filterByStatus([PKPSubmission::STATUS_PUBLISHED])
 			->getMany();
 
 		foreach ($submissionsGeo as $submission) {

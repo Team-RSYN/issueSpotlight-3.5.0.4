@@ -15,6 +15,7 @@
 namespace APP\plugins\generic\issueSpotlight\classes;
 
 use APP\facades\Repo;
+use PKP\submission\PKPSubmission;
 
 class IssueSpotlightService {
 
@@ -37,6 +38,7 @@ class IssueSpotlightService {
 	public function getIssuePayload($issueId) {
 		$submissions = Repo::submission()->getCollector()
 			->filterByIssueIds([$issueId])
+			->filterByStatus([PKPSubmission::STATUS_PUBLISHED])
 			->getMany();
 		
 		$payload = "";

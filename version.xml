@@ -3,8 +3,8 @@
 <version>
 	<application>issueSpotlight</application>
     <type>plugins.generic</type>
-    <release>1.0.0.0</release>
-    <date>2026-02-04</date>
+    <release>1.0.1.0</release>
+    <date>2026-05-27</date>
     <lazy-load>0</lazy-load>
     <sitewide>0</sitewide>
     <class>APP\plugins\generic\issueSpotlight\IssueSpotlightPlugin</class>

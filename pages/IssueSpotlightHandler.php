@@ -22,6 +22,7 @@ use APP\template\TemplateManager;
 use PKP\db\DAO;
 use PKP\db\DAORegistry;
 use PKP\plugins\PluginRegistry;
+use PKP\submission\PKPSubmission;
 
 class IssueSpotlightHandler extends Handler {
 	/**
@@ -79,6 +80,7 @@ class IssueSpotlightHandler extends Handler {
 		$submissions = Repo::submission()->getCollector()
 			->filterByContextIds([$request->getContext()->getId()])
 			->filterByIssueIds([$issueId])
+			->filterByStatus([PKPSubmission::STATUS_PUBLISHED])
 			->getMany();
 		
 		foreach ($submissions as $submission) {
