@@ -71,6 +71,7 @@ class IssueSpotlightGridHandler extends GridHandler {
 			->filterByIssueIds([$issue->getId()])
 			->filterByStatus([PKPSubmission::STATUS_PUBLISHED])
 			->getMany();
+		$articlesRows = '';
 		$authorsRows = '';
 		$articleCount = 0;
 		$uniqueAuthors = [];
@@ -224,6 +225,7 @@ class IssueSpotlightGridHandler extends GridHandler {
 			->filterByIssueIds([$issue->getId()])
 			->filterByStatus([PKPSubmission::STATUS_PUBLISHED])
 			->getMany();
+		$titles = [];
 		foreach ($submissions as $s) {
 			$t = $s->getLocalizedTitle() ?: ($s->getCurrentPublication() ? $s->getCurrentPublication()->getLocalizedTitle() : '');
 			if ($t) $titles[] = $t;
